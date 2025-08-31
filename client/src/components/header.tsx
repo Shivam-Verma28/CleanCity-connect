@@ -20,28 +20,24 @@ export default function Header() {
             </div>
           </Link>
           
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="flex items-center space-x-4">
             <Link href="/" data-testid="nav-user">
-              <span className={`font-medium transition-colors cursor-pointer flex items-center space-x-2 ${
+              <span className={`font-medium transition-colors cursor-pointer flex items-center space-x-1 text-sm ${
                 location === "/" ? "text-foreground" : "text-muted-foreground hover:text-primary"
               }`}>
                 <i className="fas fa-camera" />
-                <span>Report Issue</span>
+                <span className="hidden sm:inline">Report</span>
               </span>
             </Link>
             <Link href="/admin" data-testid="nav-admin">
-              <span className={`font-medium transition-colors cursor-pointer flex items-center space-x-2 ${
+              <span className={`font-medium transition-colors cursor-pointer flex items-center space-x-1 text-sm ${
                 location === "/admin" ? "text-foreground" : "text-muted-foreground hover:text-primary"
               }`}>
                 <i className="fas fa-shield-alt" />
-                <span>Admin Portal</span>
+                <span className="hidden sm:inline">Admin</span>
               </span>
             </Link>
           </nav>
-          
-          <button className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors" data-testid="button-mobile-menu">
-            <i className="fas fa-bars text-xl" />
-          </button>
         </div>
       </div>
     </header>
