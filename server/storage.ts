@@ -1,4 +1,6 @@
-import { type GarbageReport, type InsertGarbageReport, type Admin, type InsertAdmin } from "@shared/schema";
+import { type GarbageReport, type InsertGarbageReport, type Admin, type InsertAdmin, garbageReports, admins } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -13,80 +15,77 @@ export interface IStorage {
   createAdmin(admin: InsertAdmin): Promise<Admin>;
 }
 
-export class MemStorage implements IStorage {
-  private garbageReports: Map<string, GarbageReport>;
-  private admins: Map<string, Admin>;
-
+export class DatabaseStorage implements IStorage {
   constructor() {
-    this.garbageReports = new Map();
-    this.admins = new Map();
-    
-    // Create default admin
-    const defaultAdmin: Admin = {
-      id: randomUUID(),
-      email: "admin@garbagetracker.com",
-      password: "admin123", // In production, this should be hashed
-      createdAt: new Date(),
-    };
-    this.admins.set(defaultAdmin.id, defaultAdmin);
+    this.initializeDefaultAdmin();
+  }
+
+  private async initializeDefaultAdmin() {
+    try {
+      const existingAdmin = await this.getAdminByEmail("admin@garbagetracker.com");
+      if (!existingAdmin) {
+        await this.createAdmin({
+          email: "admin@garbagetracker.com",
+          password: "admin123", // In production, this should be hashed
+        });
+      }
+    } catch (error) {
+      console.log("Admin initialization will be handled on first access");
+    }
   }
 
   async getGarbageReports(): Promise<GarbageReport[]> {
-    return Array.from(this.garbageReports.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return await db.select().from(garbageReports).orderBy(desc(garbageReports.createdAt));
   }
 
   async getGarbageReport(id: string): Promise<GarbageReport | undefined> {
-    return this.garbageReports.get(id);
+    const [report] = await db.select().from(garbageReports).where(eq(garbageReports.id, id));
+    return report || undefined;
   }
 
   async createGarbageReport(insertReport: InsertGarbageReport): Promise<GarbageReport> {
-    const id = randomUUID();
-    const now = new Date();
-    const report: GarbageReport = {
-      ...insertReport,
-      id,
-      createdAt: now,
-      updatedAt: now,
-      verifiedAt: null,
-      completedAt: null,
-    };
-    this.garbageReports.set(id, report);
+    const [report] = await db
+      .insert(garbageReports)
+      .values(insertReport)
+      .returning();
     return report;
   }
 
   async updateGarbageReportStatus(id: string, status: "pending" | "verified" | "in-progress" | "completed"): Promise<GarbageReport | undefined> {
-    const report = this.garbageReports.get(id);
-    if (!report) return undefined;
-
     const now = new Date();
-    const updatedReport: GarbageReport = {
-      ...report,
+    const updateData: any = {
       status,
       updatedAt: now,
-      verifiedAt: status === "verified" ? now : report.verifiedAt,
-      completedAt: status === "completed" ? now : report.completedAt,
     };
     
-    this.garbageReports.set(id, updatedReport);
-    return updatedReport;
+    if (status === "verified") {
+      updateData.verifiedAt = now;
+    }
+    if (status === "completed") {
+      updateData.completedAt = now;
+    }
+    
+    const [updatedReport] = await db
+      .update(garbageReports)
+      .set(updateData)
+      .where(eq(garbageReports.id, id))
+      .returning();
+    
+    return updatedReport || undefined;
   }
 
   async getAdminByEmail(email: string): Promise<Admin | undefined> {
-    return Array.from(this.admins.values()).find(admin => admin.email === email);
+    const [admin] = await db.select().from(admins).where(eq(admins.email, email));
+    return admin || undefined;
   }
 
   async createAdmin(insertAdmin: InsertAdmin): Promise<Admin> {
-    const id = randomUUID();
-    const admin: Admin = {
-      ...insertAdmin,
-      id,
-      createdAt: new Date(),
-    };
-    this.admins.set(id, admin);
+    const [admin] = await db
+      .insert(admins)
+      .values(insertAdmin)
+      .returning();
     return admin;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

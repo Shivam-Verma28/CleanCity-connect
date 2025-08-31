@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, real } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, real, index, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -25,6 +25,17 @@ export const admins = pgTable("admins", {
   password: text("password").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+// Session storage table for admin authentication
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
 
 export const insertGarbageReportSchema = createInsertSchema(garbageReports).omit({
   id: true,
