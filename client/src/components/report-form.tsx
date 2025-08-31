@@ -40,6 +40,10 @@ export default function ReportForm() {
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
+      if (!data.image) {
+        throw new Error("Image is required");
+      }
+      
       const formData = new FormData();
       formData.append("image", data.image);
       formData.append("location", data.location);
@@ -167,7 +171,13 @@ export default function ReportForm() {
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => handleImageChange(e.target.files?.[0])}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleImageChange(file);
+                            onChange(file);
+                          }
+                        }}
                         data-testid="input-image"
                       />
                     </div>

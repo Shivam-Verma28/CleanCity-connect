@@ -87,6 +87,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create new garbage report
   app.post("/api/reports", upload.single("image"), async (req, res) => {
     try {
+      console.log("Received file:", req.file);
+      console.log("Received body:", req.body);
+      
       if (!req.file) {
         return res.status(400).json({ message: "Image is required" });
       }
