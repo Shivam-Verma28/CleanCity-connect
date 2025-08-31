@@ -23,6 +23,20 @@ export default function AdminDashboard() {
   const { data: stats } = useQuery<AdminStats>({
     queryKey: ["/api/admin/stats"],
     refetchInterval: 30000, // Refresh every 30 seconds
+    queryFn: async () => {
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch("/api/admin/stats", {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch stats");
+      }
+      
+      return response.json();
+    },
   });
 
   const { data: reports = [], isLoading } = useQuery<GarbageReport[]>({
