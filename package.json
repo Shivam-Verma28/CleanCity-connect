@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
   "build:server": "esbuild server/index.ts --platform=node --bundle --format=esm --outdir=dist",
+      "build": "vite build",
   "start": "node dist/index.js"
 }
 ,
