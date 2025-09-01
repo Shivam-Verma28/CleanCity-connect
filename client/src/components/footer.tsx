@@ -7,10 +7,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Recycle className="text-primary-foreground" />
-              </div>
-              <span className="text-lg font-bold text-foreground">GarbageTracker</span>
+<div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+  <Recycle className="text-white" />
+</div>
+              <span className="text-lg font-bold text-foreground">CleanCity Connect</span>
             </div>
             <p className="text-muted-foreground text-sm">Making communities cleaner through collaborative reporting and efficient waste management.</p>
           </div>
@@ -50,7 +50,7 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-border mt-8 pt-8 text-center">
-          <p className="text-muted-foreground text-sm">&copy; 2024 GarbageTracker. All rights reserved.</p>
+          <p className="text-muted-foreground text-sm">&copy; 2024 CleanCity Connect. All rights reserved.</p>
         </div>
       </div>
     </footer>

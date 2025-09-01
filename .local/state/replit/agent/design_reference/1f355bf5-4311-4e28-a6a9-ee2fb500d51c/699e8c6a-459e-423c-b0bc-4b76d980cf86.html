@@ -1,0 +1,699 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanCity Connect - Community Waste Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                }
+            }
+        }
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(0 0% 98%);
+            --foreground: hsl(222 84% 5%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222 84% 5%);
+            --primary: hsl(207 90% 42%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(122 39% 49%);
+            --secondary-foreground: hsl(222 84% 5%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215 19% 35%);
+            --accent: hsl(35 91% 62%);
+            --accent-foreground: hsl(222 84% 5%);
+            --destructive: hsl(0 84% 60%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(214 32% 91%);
+            --input: hsl(214 32% 91%);
+            --ring: hsl(207 90% 42%);
+            --radius: 0.5rem;
+            --font-sans: 'Inter', sans-serif;
+        }
+        
+        .dark {
+            --background: hsl(222 84% 5%);
+            --foreground: hsl(210 40% 98%);
+            --card: hsl(222 84% 8%);
+            --card-foreground: hsl(210 40% 98%);
+            --primary: hsl(207 90% 42%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(122 39% 49%);
+            --secondary-foreground: hsl(222 84% 5%);
+            --muted: hsl(217 32% 17%);
+            --muted-foreground: hsl(215 20% 65%);
+            --accent: hsl(35 91% 62%);
+            --accent-foreground: hsl(222 84% 5%);
+            --destructive: hsl(0 62% 30%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(217 32% 17%);
+            --input: hsl(217 32% 17%);
+            --ring: hsl(207 90% 42%);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-background text-foreground font-sans">
+    <!-- @COMPONENT: AppContainer -->
+    <div id="app-container" class="min-h-screen">
+        
+        <!-- @COMPONENT: Header -->
+        <header class="bg-card shadow-sm border-b border-border sticky top-0 z-50">
+            <!-- @END_COMPONENT: Header -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-recycle text-primary-foreground text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-foreground">GarbageTracker</h1>
+                            <p class="text-sm text-muted-foreground">Community Waste Management</p>
+                        </div>
+                    </div>
+                    
+                    <nav class="hidden md:flex items-center space-x-6">
+                        <button id="nav-user" class="nav-btn text-foreground hover:text-primary font-medium transition-colors">
+                            <i class="fas fa-camera mr-2"></i>Report Issue
+                        </button>
+                        <button id="nav-admin" class="nav-btn text-muted-foreground hover:text-primary font-medium transition-colors">
+                            <i class="fas fa-shield-alt mr-2"></i>Admin Portal
+                        </button>
+                    </nav>
+                    
+                    <button class="md:hidden p-2 rounded-lg hover:bg-muted transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- @COMPONENT: UserInterface -->
+        <main id="user-interface" class="interface-section">
+            <!-- @END_COMPONENT: UserInterface -->
+            <!-- Hero Section -->
+            <section class="bg-gradient-to-br from-primary to-secondary text-primary-foreground py-16">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-4">Report Garbage in Your Community</h2>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">Help keep our neighborhoods clean by reporting waste that needs collection</p>
+                    <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-4 rounded-lg text-lg font-semibold shadow-lg transition-all transform hover:scale-105">
+                        <i class="fas fa-camera mr-3"></i>Start Reporting
+                    </button>
+                </div>
+            </section>
+
+            <!-- Report Form Section -->
+            <section class="py-16 bg-muted/50">
+                <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="bg-card rounded-xl shadow-lg p-8">
+                        <div class="text-center mb-8">
+                            <h3 class="text-2xl font-bold text-foreground mb-2">Submit Garbage Report</h3>
+                            <p class="text-muted-foreground">Upload a photo and help us locate the issue</p>
+                        </div>
+
+                        <form class="space-y-6" data-implementation="Handle form submission with image upload and geolocation">
+                            <!-- Image Upload -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-foreground">Upload Photo</label>
+                                <div class="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer" data-implementation="Implement drag-drop file upload">
+                                    <div class="space-y-3">
+                                        <div class="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
+                                            <i class="fas fa-camera text-2xl text-muted-foreground"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-foreground font-medium">Click to upload or drag and drop</p>
+                                            <p class="text-sm text-muted-foreground">PNG, JPG up to 10MB</p>
+                                        </div>
+                                    </div>
+                                    <input type="file" class="hidden" accept="image/*" data-mock="true">
+                                </div>
+                            </div>
+
+                            <!-- Location Section -->
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <label class="block text-sm font-medium text-foreground">Location</label>
+                                    <button type="button" class="text-primary hover:text-primary/80 text-sm font-medium flex items-center" data-implementation="Get user's current location">
+                                        <i class="fas fa-location-arrow mr-1"></i>Use Current Location
+                                    </button>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <input type="text" placeholder="Street Address" class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background" data-mock="true">
+                                    <input type="text" placeholder="City" class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background" data-mock="true">
+                                </div>
+                                
+                                <!-- Map Preview -->
+                                <div class="h-48 bg-muted rounded-lg border border-border flex items-center justify-center" data-implementation="Integrate with maps API">
+                                    <div class="text-center">
+                                        <i class="fas fa-map-marker-alt text-3xl text-muted-foreground mb-2"></i>
+                                        <p class="text-muted-foreground">Location will appear here</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-foreground">Description (Optional)</label>
+                                <textarea rows="3" placeholder="Describe the garbage situation..." class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background resize-none" data-mock="true"></textarea>
+                            </div>
+
+                            <!-- Contact Info -->
+                            <div class="space-y-4">
+                                <h4 class="text-lg font-medium text-foreground">Contact Information</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <input type="text" placeholder="Your Name" class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background" data-mock="true">
+                                    <input type="email" placeholder="Email Address" class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background" data-mock="true">
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 rounded-lg font-semibold text-lg shadow-lg transition-all transform hover:scale-[1.02]" data-event="click:handleSubmit">
+                                <i class="fas fa-paper-plane mr-2"></i>Submit Report
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Reports -->
+            <section class="py-16">
+                <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-bold text-foreground mb-4">Recent Community Reports</h3>
+                        <p class="text-muted-foreground text-lg">Track the progress of garbage reports in your area</p>
+                    </div>
+
+                    <!-- @MAP: recentReports.map(report => ( -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-card rounded-xl shadow-lg overflow-hidden border border-border" data-mock="true">
+                            <!-- Overflowing trash bins on street corner with scattered litter -->
+                            <img src="https://images.unsplash.com/photo-1530587191325-3db32d826c18?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200" alt="Garbage report" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-accent/10 text-accent">
+                                        <i class="fas fa-clock mr-1"></i>Verified
+                                    </span>
+                                    <span class="text-sm text-muted-foreground">2 hours ago</span>
+                                </div>
+                                <h4 class="text-lg font-semibold text-foreground mb-2">Oak Street & 5th Ave</h4>
+                                <p class="text-muted-foreground text-sm mb-4">Overflowing bins blocking sidewalk</p>
+                                <div class="flex items-center text-sm text-muted-foreground">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span data-bind="report.reporter">Sarah M.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-card rounded-xl shadow-lg overflow-hidden border border-border" data-mock="true">
+                            <!-- Illegal dumping site with construction debris and household waste -->
+                            <img src="https://pixabay.com/get/ge48aa4dd30f27ce31ec429bb6394e32a7e3bf799c18b3b5c0a239021c38ee915beeaa9076794ae98ea6e11fc3406e4feb7e8d8cc4974d90a5942571596846277_1280.jpg" alt="Garbage report" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary/10 text-secondary">
+                                        <i class="fas fa-check mr-1"></i>In Progress
+                                    </span>
+                                    <span class="text-sm text-muted-foreground">5 hours ago</span>
+                                </div>
+                                <h4 class="text-lg font-semibold text-foreground mb-2">Pine Park Trail</h4>
+                                <p class="text-muted-foreground text-sm mb-4">Illegal dumping near entrance</p>
+                                <div class="flex items-center text-sm text-muted-foreground">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span data-bind="report.reporter">Mike R.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-card rounded-xl shadow-lg overflow-hidden border border-border" data-mock="true">
+                            <!-- Litter scattered in public park with bottles and food packaging -->
+                            <img src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200" alt="Garbage report" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive">
+                                        <i class="fas fa-exclamation mr-1"></i>Pending
+                                    </span>
+                                    <span class="text-sm text-muted-foreground">1 day ago</span>
+                                </div>
+                                <h4 class="text-lg font-semibold text-foreground mb-2">Central Park</h4>
+                                <p class="text-muted-foreground text-sm mb-4">Litter around picnic area</p>
+                                <div class="flex items-center text-sm text-muted-foreground">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span data-bind="report.reporter">Elena K.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+                </div>
+            </section>
+        </main>
+
+        <!-- @COMPONENT: AdminInterface -->
+        <main id="admin-interface" class="interface-section hidden">
+            <!-- @END_COMPONENT: AdminInterface -->
+            <!-- Admin Login -->
+            <section id="admin-login" class="min-h-screen flex items-center justify-center bg-muted/30 py-12">
+                <div class="max-w-md w-full mx-4">
+                    <div class="bg-card rounded-xl shadow-lg p-8 border border-border">
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-shield-alt text-primary-foreground text-2xl"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-foreground">Admin Portal</h2>
+                            <p class="text-muted-foreground mt-2">Access the management dashboard</p>
+                        </div>
+                        
+                        <form class="space-y-6" data-implementation="Handle admin authentication">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-foreground">Email</label>
+                                <input type="email" placeholder="admin@garbagetracker.com" class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background" data-mock="true">
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-foreground">Password</label>
+                                <input type="password" placeholder="••••••••" class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background" data-mock="true">
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-lg font-semibold transition-all" data-event="click:handleAdminLogin">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Dashboard -->
+            <section id="admin-dashboard" class="hidden min-h-screen bg-background">
+                <!-- Dashboard Header -->
+                <div class="bg-card shadow-sm border-b border-border">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+                                <p class="text-muted-foreground">Manage garbage reports and track completion status</p>
+                            </div>
+                            <button class="bg-destructive hover:bg-destructive/90 text-destructive-foreground px-4 py-2 rounded-lg font-medium transition-colors" data-event="click:handleLogout">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-card rounded-xl p-6 shadow-lg border border-border">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-destructive/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-exclamation-triangle text-destructive text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-muted-foreground">Pending</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.pending">12</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-card rounded-xl p-6 shadow-lg border border-border">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-eye text-accent text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-muted-foreground">Verified</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.verified">8</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-card rounded-xl p-6 shadow-lg border border-border">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-cog text-secondary text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-muted-foreground">In Progress</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.inProgress">5</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-card rounded-xl p-6 shadow-lg border border-border">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-check-circle text-primary text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-muted-foreground">Completed</p>
+                                    <p class="text-2xl font-bold text-foreground" data-bind="stats.completed">34</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports Table -->
+                    <div class="bg-card rounded-xl shadow-lg border border-border overflow-hidden">
+                        <div class="px-6 py-4 border-b border-border">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-foreground">Pending Reports</h3>
+                                <div class="flex items-center space-x-3">
+                                    <select class="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring">
+                                        <option>All Status</option>
+                                        <option>Pending</option>
+                                        <option>Verified</option>
+                                        <option>In Progress</option>
+                                    </select>
+                                    <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-colors">
+                                        <i class="fas fa-filter mr-2"></i>Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-muted/50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left text-sm font-medium text-foreground">Report</th>
+                                        <th class="px-6 py-4 text-left text-sm font-medium text-foreground">Location</th>
+                                        <th class="px-6 py-4 text-left text-sm font-medium text-foreground">Reporter</th>
+                                        <th class="px-6 py-4 text-left text-sm font-medium text-foreground">Status</th>
+                                        <th class="px-6 py-4 text-left text-sm font-medium text-foreground">Time</th>
+                                        <th class="px-6 py-4 text-left text-sm font-medium text-foreground">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-border">
+                                    <!-- @MAP: reports.map(report => ( -->
+                                    <tr class="hover:bg-muted/30 transition-colors" data-mock="true">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <!-- Overflowing public waste bins with scattered debris -->
+                                                <img src="https://images.unsplash.com/photo-1530587191325-3db32d826c18?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Report image" class="w-16 h-16 rounded-lg object-cover mr-4">
+                                                <div>
+                                                    <p class="font-medium text-foreground">Overflowing bins</p>
+                                                    <p class="text-sm text-muted-foreground">Blocking pedestrian access</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-foreground">Oak St & 5th Ave</td>
+                                        <td class="px-6 py-4 text-foreground">Sarah Martinez</td>
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-destructive/10 text-destructive">
+                                                <i class="fas fa-exclamation mr-1"></i>Pending
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-muted-foreground">2 hours ago</td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center space-x-2">
+                                                <button class="bg-accent hover:bg-accent/90 text-accent-foreground px-3 py-1 rounded-md text-sm font-medium transition-colors" data-event="click:verifyReport">
+                                                    <i class="fas fa-eye mr-1"></i>Verify
+                                                </button>
+                                                <button class="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-3 py-1 rounded-md text-sm font-medium transition-colors" data-event="click:markInProgress">
+                                                    <i class="fas fa-cog mr-1"></i>Process
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="hover:bg-muted/30 transition-colors" data-mock="true">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <!-- Illegal dumping with construction waste and household items -->
+                                                <img src="https://pixabay.com/get/gc20e9621def5fe6e33a79a758faf48dc01eed511d07f7d66fe5a6e3e3333c3cf52458beacbc0dbd21904e36ff864127fc3ed85199d607623938f82081aef5994_1280.jpg" alt="Report image" class="w-16 h-16 rounded-lg object-cover mr-4">
+                                                <div>
+                                                    <p class="font-medium text-foreground">Illegal dumping</p>
+                                                    <p class="text-sm text-muted-foreground">Construction debris</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-foreground">Pine Park Trail</td>
+                                        <td class="px-6 py-4 text-foreground">Mike Rodriguez</td>
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-accent/10 text-accent">
+                                                <i class="fas fa-eye mr-1"></i>Verified
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-muted-foreground">5 hours ago</td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center space-x-2">
+                                                <button class="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-3 py-1 rounded-md text-sm font-medium transition-colors" data-event="click:markInProgress">
+                                                    <i class="fas fa-cog mr-1"></i>Process
+                                                </button>
+                                                <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-md text-sm font-medium transition-colors" data-event="click:markComplete">
+                                                    <i class="fas fa-check mr-1"></i>Complete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="hover:bg-muted/30 transition-colors" data-mock="true">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <!-- Park litter with bottles and food packaging scattered on grass -->
+                                                <img src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Report image" class="w-16 h-16 rounded-lg object-cover mr-4">
+                                                <div>
+                                                    <p class="font-medium text-foreground">Park litter</p>
+                                                    <p class="text-sm text-muted-foreground">Picnic area cleanup needed</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-foreground">Central Park</td>
+                                        <td class="px-6 py-4 text-foreground">Elena Kim</td>
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-secondary/10 text-secondary">
+                                                <i class="fas fa-cog mr-1"></i>In Progress
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-muted-foreground">1 day ago</td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center space-x-2">
+                                                <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-1 rounded-md text-sm font-medium transition-colors" data-event="click:markComplete">
+                                                    <i class="fas fa-check mr-1"></i>Complete
+                                                </button>
+                                                <button class="text-muted-foreground hover:text-foreground px-3 py-1 rounded-md text-sm transition-colors" data-event="click:viewDetails">
+                                                    <i class="fas fa-external-link-alt mr-1"></i>Details
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- @END_MAP )) -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="px-6 py-4 border-t border-border flex items-center justify-between">
+                            <p class="text-sm text-muted-foreground">Showing 3 of 25 reports</p>
+                            <div class="flex items-center space-x-2">
+                                <button class="px-3 py-1 border border-border rounded text-sm text-muted-foreground hover:text-foreground transition-colors">Previous</button>
+                                <button class="px-3 py-1 bg-primary text-primary-foreground rounded text-sm font-medium">1</button>
+                                <button class="px-3 py-1 border border-border rounded text-sm text-muted-foreground hover:text-foreground transition-colors">2</button>
+                                <button class="px-3 py-1 border border-border rounded text-sm text-muted-foreground hover:text-foreground transition-colors">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- @COMPONENT: Footer -->
+        <footer class="bg-card border-t border-border py-12">
+            <!-- @END_COMPONENT: Footer -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                                <i class="fas fa-recycle text-primary-foreground"></i>
+                            </div>
+                            <span class="text-lg font-bold text-foreground">GarbageTracker</span>
+                        </div>
+                        <p class="text-muted-foreground text-sm">Making communities cleaner through collaborative reporting and efficient waste management.</p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-foreground font-semibold mb-4">Quick Links</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Report Issue</a></li>
+                            <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Track Reports</a></li>
+                            <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Guidelines</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-foreground font-semibold mb-4">Support</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Help Center</a></li>
+                            <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Contact Us</a></li>
+                            <li><a href="#" class="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-foreground font-semibold mb-4">Connect</h4>
+                        <div class="flex space-x-3">
+                            <a href="#" class="w-8 h-8 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-8 h-8 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="w-8 h-8 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-border mt-8 pt-8 text-center">
+                    <p class="text-muted-foreground text-sm">&copy; 2024 GarbageTracker. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // @STATE: currentInterface:string = 'user'
+        // @STATE: isAdminLoggedIn:boolean = false
+        
+        (function() {
+            'use strict';
+            
+            // Navigation between interfaces
+            const navUser = document.getElementById('nav-user');
+            const navAdmin = document.getElementById('nav-admin');
+            const userInterface = document.getElementById('user-interface');
+            const adminInterface = document.getElementById('admin-interface');
+            const adminLogin = document.getElementById('admin-login');
+            const adminDashboard = document.getElementById('admin-dashboard');
+            
+            let currentInterface = 'user';
+            let isAdminLoggedIn = false;
+            
+            function showInterface(interfaceType) {
+                // Hide all interfaces
+                userInterface.classList.add('hidden');
+                adminInterface.classList.add('hidden');
+                
+                // Update navigation state
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('text-foreground');
+                    btn.classList.add('text-muted-foreground');
+                });
+                
+                if (interfaceType === 'user') {
+                    userInterface.classList.remove('hidden');
+                    navUser.classList.remove('text-muted-foreground');
+                    navUser.classList.add('text-foreground');
+                } else if (interfaceType === 'admin') {
+                    adminInterface.classList.remove('hidden');
+                    navAdmin.classList.remove('text-muted-foreground');
+                    navAdmin.classList.add('text-foreground');
+                    
+                    // Show appropriate admin section
+                    if (isAdminLoggedIn) {
+                        adminLogin.classList.add('hidden');
+                        adminDashboard.classList.remove('hidden');
+                    } else {
+                        adminLogin.classList.remove('hidden');
+                        adminDashboard.classList.add('hidden');
+                    }
+                }
+                
+                currentInterface = interfaceType;
+            }
+            
+            // Event listeners for navigation
+            navUser.addEventListener('click', () => showInterface('user'));
+            navAdmin.addEventListener('click', () => showInterface('admin'));
+            
+            // Admin login simulation
+            const adminLoginForm = adminLogin.querySelector('form');
+            const adminLogoutBtn = document.querySelector('[data-event="click:handleLogout"]');
+            
+            adminLoginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // TODO: Implement actual authentication
+                isAdminLoggedIn = true;
+                showInterface('admin');
+            });
+            
+            adminLogoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                isAdminLoggedIn = false;
+                showInterface('admin');
+            });
+            
+            // Report action buttons simulation
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                
+                if (btn.dataset.event === 'click:verifyReport') {
+                    // TODO: Implement report verification logic
+                    alert('Report verified successfully!');
+                } else if (btn.dataset.event === 'click:markInProgress') {
+                    // TODO: Implement in-progress marking logic
+                    alert('Report marked as in progress!');
+                } else if (btn.dataset.event === 'click:markComplete') {
+                    // TODO: Implement completion logic
+                    alert('Report marked as completed!');
+                }
+            });
+            
+            // Form submissions
+            const reportForm = document.querySelector('#user-interface form');
+            if (reportForm) {
+                reportForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // TODO: Implement form submission with image upload and geolocation
+                    alert('Report submitted successfully! You will receive updates via email.');
+                });
+            }
+            
+            // Initialize with user interface
+            showInterface('user');
+        })();
+    </script>
+</body>
+</html>

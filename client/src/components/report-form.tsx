@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   image: z.instanceof(File, { message: "Image is required" }),
@@ -127,8 +128,13 @@ export default function ReportForm() {
     <Card className="shadow-lg">
       <CardContent className="p-8">
         <div className="text-center mb-8">
-          <h3 className="text-2xl font-bold text-foreground mb-2">Submit Garbage Report</h3>
-          <p className="text-muted-foreground">Upload a photo and help us locate the issue</p>
+         <h3 className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-green-600 bg-clip-text text-transparent mb-2">
+  🧹 Submit Garbage Report
+</h3>
+<p className="text-muted-foreground mb-6">
+  Upload a photo and help us locate the issue
+</p>
+
         </div>
 
         <Form {...form}>
@@ -278,30 +284,46 @@ export default function ReportForm() {
                       <FormMessage />
                     </FormItem>
                   )}
+                  />
+                  <FormField
+                  control={form.control}
+                  name="reporterPhone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact Number</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="tel"
+                          placeholder="Enter your phone number"
+                          {...field}
+                          data-testid="input-contact"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
             </div>
+            
 
             {/* Submit Button */}
-            <Button 
-              type="submit" 
-              size="lg"
-              className="w-full"
-              disabled={mutation.isPending}
-              data-testid="button-submit-report"
-            >
-              {mutation.isPending ? (
-                <div className="flex items-center">
-                  <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
-                  Submitting...
-                </div>
-              ) : (
-                <>
-                  <Send className="mr-2" size={16} />
-                  Submit Report
-                </>
-              )}
-            </Button>
+            <Button
+  type="submit"
+  size="lg"
+  disabled={mutation.isPending}
+  className="w-full bg-gradient-to-r from-orange-500 to-green-600 text-white 
+             font-semibold shadow-lg hover:scale-[1.02] transition"
+>
+  {mutation.isPending ? (
+    <>
+      <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Submitting...
+    </>
+  ) : (
+    "Submit Report"
+  )}
+</Button>
+
           </form>
         </Form>
       </CardContent>

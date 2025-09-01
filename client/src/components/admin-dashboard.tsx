@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { GarbageReport } from "@shared/schema";
+import ImageModal from "@/components/ImageModal";
 
 interface AdminStats {
   pending: number;
@@ -265,19 +266,22 @@ export default function AdminDashboard() {
                     return (
                       <tr key={report.id} className="hover:bg-muted/30 transition-colors" data-testid={`row-report-${report.id}`}>
                         <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <img 
-                              src={report.imageUrl} 
-                              alt="Report" 
-                              className="w-16 h-16 rounded-lg object-cover mr-4"
-                              data-testid={`img-admin-report-${report.id}`}
-                            />
-                            <div>
-                              <p className="font-medium text-foreground">{report.description || "Garbage report"}</p>
-                              <p className="text-sm text-muted-foreground">ID: {report.id.slice(0, 8)}</p>
-                            </div>
-                          </div>
-                        </td>
+  <div className="flex items-center">
+    <ImageModal
+      src={report.imageUrl}
+      alt="Report"
+      className="w-16 h-16 rounded-lg object-cover mr-4 cursor-pointer"
+    />
+    <div>
+      <p className="font-medium text-foreground">
+        {report.description || "Garbage report"}
+      </p>
+      <p className="text-sm text-muted-foreground">
+        ID: {report.id.slice(0, 8)}
+      </p>
+    </div>
+  </div>
+</td>
                         <td className="px-6 py-4 text-foreground" data-testid={`location-admin-${report.id}`}>
                           {report.location}
                         </td>
